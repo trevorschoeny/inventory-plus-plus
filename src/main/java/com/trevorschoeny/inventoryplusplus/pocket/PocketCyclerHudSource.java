@@ -58,4 +58,14 @@ public final class PocketCyclerHudSource implements CycleHudSource {
         visual.add(mc.player.getInventory().getItem(hotbarSlot));
         return CycleView.fromVisualOrder(visual);
     }
+
+    /**
+     * Pocket Cycler pins to the BOTTOM of the stacked HUD when it shares a
+     * hotbar slot with another cycler (Trev 2026-06-04) — the lowest stack
+     * order takes the bottom (nearest-the-hotbar) strip.
+     */
+    @Override
+    public int hudStackOrder() {
+        return 0;
+    }
 }

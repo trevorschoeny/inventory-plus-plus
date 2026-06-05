@@ -70,7 +70,7 @@ public final class PocketInput {
         int count = PocketState.count(hotbar);
         if (count < 1) return; // no cycle (need ≥1 pocket + hotbar)
         ClientPlayNetworking.send(new PocketRotateC2S(hotbar, count, forward));
-        CycleHudRegistry.fireCycleAnimation(
+        CycleHudRegistry.fireCycleAnimation(PocketCyclerHudSource.INSTANCE,
                 hotbar, forward ? CyclerDirection.FORWARD : CyclerDirection.BACKWARD);
     }
 }

@@ -15,9 +15,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 /**
- * IPP's YACL config screen — one tab for Pocket Cycler. Mirrors IP's
- * {@code IPConfigScreen} patterns. IPP owns its own screen + ModMenu entry
- * (dependency direction IPP→IP).
+ * IPP's YACL config screen — one <b>IPP</b> tab (currently just Pocket
+ * Cycler). Mirrors IP's {@code IPConfigScreen} patterns. IPP owns its own
+ * screen + ModMenu entry (the one-way IPP→IP dependency); Keybindery
+ * auto-appends a Keybinds tab. Unifying IP + IPP into one screen is deferred
+ * (Trev 2026-06-04).
  */
 public final class IPPConfigScreen {
 
@@ -35,7 +37,7 @@ public final class IPPConfigScreen {
         Option<Boolean> enabled = booleanOption(
                 "Enable Pocket Cycler",
                 "Adds server-persistent pocket slots above your hotbar slots. "
-                        + "Press P over a hotbar slot to attach one; +/- to resize (1–3).",
+                        + "Hover a hotbar slot to reveal its pockets; use +/− to add or remove (up to 3).",
                 true,
                 IPPConfig::pocketCyclerEnabled,
                 IPPConfig::setPocketCyclerEnabled);
@@ -68,7 +70,7 @@ public final class IPPConfigScreen {
         }
 
         return ConfigCategory.createBuilder()
-                .name(Component.literal("Pocket Cycler"))
+                .name(Component.literal("IPP"))
                 .group(group.build())
                 .build();
     }

@@ -20,7 +20,8 @@ import org.lwjgl.glfw.GLFW;
  *
  * <ul>
  *   <li><b>Cycle Forward / Backward</b> — rotate the active pocket cycle.
- *       Defaults chosen distinct from Column Cycler's {@code ] [}.</li>
+ *       Defaults to the <b>→ / ←</b> arrow keys (Trev 2026-06-04), distinct
+ *       from Column Cycler's {@code ] [}.</li>
  * </ul>
  */
 public final class IPPKeybinds {
@@ -32,11 +33,11 @@ public final class IPPKeybinds {
 
     public static final KeyMapping CYCLE_FORWARD = new KeyMapping(
             "key.inventoryplusplus.pocket_cycle_forward",
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_APOSTROPHE, CATEGORY);
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT, CATEGORY);
 
     public static final KeyMapping CYCLE_BACKWARD = new KeyMapping(
             "key.inventoryplusplus.pocket_cycle_backward",
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_SEMICOLON, CATEGORY);
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT, CATEGORY);
 
     public static void register() {
         KeyBindingHelper.registerKeyBinding(CYCLE_FORWARD);
