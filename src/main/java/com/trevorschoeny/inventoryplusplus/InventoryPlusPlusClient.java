@@ -1,7 +1,9 @@
 package com.trevorschoeny.inventoryplusplus;
 
+import com.trevorschoeny.inventoryplus.lockedslots.LockedSlots;
 import com.trevorschoeny.inventoryplusplus.config.IPPConfig;
 import com.trevorschoeny.inventoryplusplus.config.IPPKeybinds;
+import com.trevorschoeny.inventoryplusplus.containerlocks.ContainerLockProvider;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketCyclerHudSource;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketInput;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketState;
@@ -29,6 +31,11 @@ public class InventoryPlusPlusClient implements ClientModInitializer {
         // paying off — one HUD, both cyclers).
         PocketCyclerHudSource.register();
 
-        InventoryPlusPlus.LOGGER.info("[inventoryplusplus] Client init — Pocket Cycler active.");
+        // Plug Container Locks into IP's client-side lock seam, so IP's unified
+        // lock-check / edit UI / icon / sort+move-matching skip recognize placed
+        // containers. Client-only: IP's LockedSlots is a client-only class.
+        LockedSlots.registerProvider(new ContainerLockProvider());
+
+        InventoryPlusPlus.LOGGER.info("[inventoryplusplus] Client init — Pocket Cycler + Container Locks active.");
     }
 }

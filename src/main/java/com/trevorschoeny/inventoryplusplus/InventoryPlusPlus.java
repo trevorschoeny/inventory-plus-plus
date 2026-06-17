@@ -1,5 +1,6 @@
 package com.trevorschoeny.inventoryplusplus;
 
+import com.trevorschoeny.inventoryplusplus.containerlocks.ContainerLocks;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketEvictC2S;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketRotateC2S;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketServerOps;
@@ -30,6 +31,11 @@ public class InventoryPlusPlus implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Register the SHARED container-lock channel (§0049). Universal, and
+        // must happen before any container menu opens so the slot state is
+        // known wherever a lock is read or written.
+        ContainerLocks.register();
+
         // Register the player-attached pocket content storage (27 slots).
         // Must happen on both sides before any InventoryMenu is constructed,
         // so the graft mixin can bind it.
