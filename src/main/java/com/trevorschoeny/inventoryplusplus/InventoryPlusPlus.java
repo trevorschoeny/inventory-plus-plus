@@ -1,6 +1,7 @@
 package com.trevorschoeny.inventoryplusplus;
 
 import com.trevorschoeny.inventoryplusplus.containerlocks.ContainerLocks;
+import com.trevorschoeny.inventoryplusplus.equipment.EquipmentSlots;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketEvictC2S;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketRotateC2S;
 import com.trevorschoeny.inventoryplusplus.pocket.PocketServerOps;
@@ -41,6 +42,11 @@ public class InventoryPlusPlus implements ModInitializer {
         // so the graft mixin can bind it.
         Pockets.register();
 
+        // Register the player-attached equipment content storage (2 slots:
+        // elytra + totem). Same constraint — must precede any InventoryMenu
+        // construction so the equipment graft mixin can bind it.
+        EquipmentSlots.register();
+
         // C2S payload types — registered on both sides (the codec must be
         // known wherever the payload travels).
         PayloadTypeRegistry.playC2S().register(PocketRotateC2S.TYPE, PocketRotateC2S.CODEC);
@@ -65,6 +71,6 @@ public class InventoryPlusPlus implements ModInitializer {
             }
         });
 
-        LOGGER.info("[inventoryplusplus] Common init — pocket storage + networking registered.");
+        LOGGER.info("[inventoryplusplus] Common init — pocket + equipment storage + networking registered.");
     }
 }

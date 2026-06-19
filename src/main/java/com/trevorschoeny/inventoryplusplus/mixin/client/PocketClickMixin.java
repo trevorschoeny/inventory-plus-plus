@@ -19,8 +19,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Pocket input routing on the inventory screen — two concerns, both on
- * {@link AbstractContainerScreen}:
+ * Graft input routing on the inventory screen — two concerns, both on
+ * {@link AbstractContainerScreen}. The +/− buttons are Pocket-Cycler-specific
+ * (gated on the toggle); the §0046 graft input opacity is <b>feature-agnostic</b>
+ * — it resolves every revealed graft on the menu (equipment slots + pockets), so
+ * it runs whether or not the Pocket Cycler is on (otherwise off-screen-parked
+ * equipment slots would never win their clicks with the cycler off):
  *
  * <ol>
  *   <li><b>+/− resize buttons</b> ({@code mouseClicked}) — a click on a revealed
@@ -59,7 +63,10 @@ public abstract class PocketClickMixin {
     private void inventoryplusplus$preferGraft(double mouseX, double mouseY,
                                                CallbackInfoReturnable<Slot> cir) {
         if (!((Object) this instanceof InventoryScreen)) return;
-        if (!IPPConfig.pocketCyclerEnabled()) return;
+        // Feature-agnostic: resolveHoveredSlot considers EVERY revealed graft on
+        // the menu (equipment slots + revealed pockets), so it runs regardless of
+        // the pocket toggle — otherwise equipment slots (parked off-screen for
+        // vanilla) would never win hover/click with the cycler off.
         MenuKitGraftInput.Resolution r = MenuKitGraftInput.resolveHoveredSlot(
                 (AbstractContainerScreen<?>) (Object) this, mouseX, mouseY);
         if (r.handled()) cir.setReturnValue(r.slot()); // grafted slot, or null for an in-panel gap
@@ -77,37 +84,39 @@ public abstract class PocketClickMixin {
     private void inventoryplusplus$pocketClick(MouseButtonEvent event, boolean doubleClick,
                                                CallbackInfoReturnable<Boolean> cir) {
         if (!((Object) this instanceof InventoryScreen)) return;
-        if (!IPPConfig.pocketCyclerEnabled()) return;
 
         AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
-        AbstractContainerScreenAccessor acc = (AbstractContainerScreenAccessor) screen;
-        int leftPos = acc.menuKit$getLeftPos();
-        int topPos = acc.menuKit$getTopPos();
         double mouseX = event.x();
         double mouseY = event.y();
 
-        // ── 1) +/− resize buttons (only meaningful when a column is revealed) ──
+        // ── 1) Pocket +/− resize buttons (pocket-specific — gated on the toggle) ──
         // Buttons are always drawn (grayed at their limit). Consume the click on
         // a button rect regardless; act only when the limit allows.
-        int rev = PocketHoverState.revealedHotbar();
-        if (rev >= 0) {
-            int c = PocketState.count(rev);
-            if (PocketButtons.inRect(mouseX, mouseY, PocketButtons.plusRect(leftPos, topPos, rev))) {
-                if (c < Pockets.MAX_PER_SLOT) PocketState.grow(rev); // grayed at max → no-op
-                cir.setReturnValue(true);
-                return;
-            } else if (PocketButtons.inRect(mouseX, mouseY, PocketButtons.minusRect(leftPos, topPos, rev))) {
-                if (c > 0) PocketState.shrink(rev); // grayed at 0 → no-op
-                cir.setReturnValue(true);
-                return;
+        if (IPPConfig.pocketCyclerEnabled()) {
+            AbstractContainerScreenAccessor acc = (AbstractContainerScreenAccessor) screen;
+            int leftPos = acc.menuKit$getLeftPos();
+            int topPos = acc.menuKit$getTopPos();
+            int rev = PocketHoverState.revealedHotbar();
+            if (rev >= 0) {
+                int c = PocketState.count(rev);
+                if (PocketButtons.inRect(mouseX, mouseY, PocketButtons.plusRect(leftPos, topPos, rev))) {
+                    if (c < Pockets.MAX_PER_SLOT) PocketState.grow(rev); // grayed at max → no-op
+                    cir.setReturnValue(true);
+                    return;
+                } else if (PocketButtons.inRect(mouseX, mouseY, PocketButtons.minusRect(leftPos, topPos, rev))) {
+                    if (c > 0) PocketState.shrink(rev); // grayed at 0 → no-op
+                    cir.setReturnValue(true);
+                    return;
+                }
             }
         }
 
-        // ── 2) §0046 covered-click guard ──
-        // resolveHoveredSlot self-gates on inert pockets: if nothing is revealed
+        // ── 2) §0046 covered-click guard (feature-agnostic — every graft) ──
+        // resolveHoveredSlot self-gates on inert grafts: if nothing is revealed
         // it returns PASS and we do nothing. Over a revealed slot it reports the
         // slot (non-null) → we DON'T eat, letting vanilla route via the grafted
         // getHoveredSlot. Only an in-panel gap (handled + null slot) is eaten.
+        // Runs regardless of the pocket toggle so equipment slots are covered too.
         MenuKitGraftInput.Resolution r = MenuKitGraftInput.resolveHoveredSlot(screen, mouseX, mouseY);
         if (r.handled() && r.slot() == null) cir.setReturnValue(true);
     }

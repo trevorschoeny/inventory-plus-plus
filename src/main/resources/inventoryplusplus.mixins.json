@@ -4,16 +4,21 @@
   "package": "com.trevorschoeny.inventoryplusplus.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractContainerMenuMoveInvoker",
     "ContainerLockClickCaptureMixin",
     "ContainerLockEnforcementMixin",
     "ContainerLockPickAllMixin",
     "DispenserLockEnforcementMixin",
+    "EquipmentGlideMixin",
     "HopperLockEnforcementMixin",
-    "InventoryMenuPocketGraftMixin"
+    "InventoryMenuEquipmentGraftMixin",
+    "InventoryMenuPocketGraftMixin",
+    "InventoryMenuQuickMoveMixin"
   ],
   "client": [
-    "client.PocketRenderMixin",
-    "client.PocketClickMixin"
+    "client.CreativeEquipmentSlotMixin",
+    "client.PocketClickMixin",
+    "client.PocketRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
