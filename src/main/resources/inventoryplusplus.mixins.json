@@ -17,6 +17,9 @@
   ],
   "client": [
     "client.CreativeEquipmentSlotMixin",
+    "client.EquipElytraExtractMixin",
+    "client.EquipElytraRenderStateMixin",
+    "client.EquipElytraWingsMixin",
     "client.PocketClickMixin",
     "client.PocketRenderMixin"
   ],
