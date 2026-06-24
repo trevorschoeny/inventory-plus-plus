@@ -10,6 +10,7 @@
     "ContainerLockPickAllMixin",
     "DispenserLockEnforcementMixin",
     "EquipmentGlideMixin",
+    "EquipmentTotemMixin",
     "HopperLockEnforcementMixin",
     "InventoryMenuEquipmentGraftMixin",
     "InventoryMenuPocketGraftMixin",

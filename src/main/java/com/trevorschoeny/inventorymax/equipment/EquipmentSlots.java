@@ -129,6 +129,20 @@ public final class EquipmentSlots {
         storage.setStack(ELYTRA_INDEX, elytra);
     }
 
+    /**
+     * Consumes one totem from the equipment totem slot and writes it back. Same
+     * detached-copy caveat as {@link #wearElytra}: the read returns a copy, so the
+     * shrink only sticks (and syncs to the client) if we {@code setStack} it back.
+     * Called when the slot's totem fires a death save.
+     */
+    public static void consumeTotem(Player player) {
+        Storage storage = EQUIPMENT.bind(player);
+        ItemStack totem = storage.getStack(TOTEM_INDEX);
+        if (totem.isEmpty()) return;
+        totem.shrink(1);
+        storage.setStack(TOTEM_INDEX, totem);
+    }
+
     // ─── Per-slot accept filters ─────────────────────────────────────────
     //
     // Spec: the elytra slot accepts only elytra; the totem slot accepts only
