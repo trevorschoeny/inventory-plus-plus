@@ -1,12 +1,15 @@
 package com.trevorschoeny.inventorymax.mixin.client;
 
+import com.trevorschoeny.inventorymax.equipment.EquipSlotIcons;
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
 import com.trevorschoeny.menukit.core.MenuKitSlot;
 import com.trevorschoeny.menukit.core.SlotRendering;
 import com.trevorschoeny.menukit.mixin.AbstractContainerScreenAccessor;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 
@@ -77,7 +80,7 @@ public abstract class CreativeEquipmentSlotMixin {
         }
     }
 
-    /** Draw the recessed slot frame for our two equipment slots (inventory tab only). */
+    /** Draw the recessed slot frame + empty-slot placeholder for our two equipment slots (inventory tab only). */
     @Inject(method = "renderBg", at = @At("TAIL"))
     private void inventoryMax$drawEquipFrames(GuiGraphics g, float partialTick,
                                                    int mouseX, int mouseY, CallbackInfo ci) {
@@ -91,5 +94,18 @@ public abstract class CreativeEquipmentSlotMixin {
                 topPos + EquipmentSlots.CREATIVE_Y - 1, size, false);
         SlotRendering.drawSlotBackground(g, leftPos + EquipmentSlots.CREATIVE_TOTEM_X - 1,
                 topPos + EquipmentSlots.CREATIVE_Y - 1, size, false);
+        // Empty-slot placeholders on top of the frames (only when the slot is empty;
+        // a filled slot's item is drawn later by the creative screen, on top).
+        Player player = Minecraft.getInstance().player;
+        if (player != null) {
+            if (EquipmentSlots.getElytra(player).isEmpty()) {
+                EquipSlotIcons.draw(g, EquipSlotIcons.ELYTRA,
+                        leftPos + EquipmentSlots.CREATIVE_ELYTRA_X, topPos + EquipmentSlots.CREATIVE_Y);
+            }
+            if (EquipmentSlots.getTotem(player).isEmpty()) {
+                EquipSlotIcons.draw(g, EquipSlotIcons.TOTEM,
+                        leftPos + EquipmentSlots.CREATIVE_TOTEM_X, topPos + EquipmentSlots.CREATIVE_Y);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.trevorschoeny.inventorymax.mixin.client;
 
 import com.trevorschoeny.inventorymax.config.IMConfig;
+import com.trevorschoeny.inventorymax.equipment.EquipSlotIcons;
 import com.trevorschoeny.inventorymax.pocket.PocketHover;
 import com.trevorschoeny.inventorymax.pocket.PocketPanelRender;
 import com.trevorschoeny.inventorymax.pocket.PocketRow;
@@ -84,6 +85,8 @@ public abstract class PocketRenderMixin {
             PocketPanelRender.drawBackground(g, leftPos, topPos);
         }
         MenuKitGraftRender.renderGraftedSlots(screen, g, mouseX, mouseY);
+        // Empty-slot placeholders for the equipment slots, over the graft render.
+        EquipSlotIcons.renderEmpty(screen.getMenu(), g, leftPos, topPos);
         if (pockets) {
             PocketPanelRender.drawButtons(g, leftPos, topPos, mouseX, mouseY);
         }
