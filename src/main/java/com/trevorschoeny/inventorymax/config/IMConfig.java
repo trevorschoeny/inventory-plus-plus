@@ -42,6 +42,11 @@ public final class IMConfig {
     // Shared cycle HUD mode for pockets (None / Mini-hotbar). Default
     // MINI_HOTBAR, matching Column Cycler.
     private static HudMode pocketHudMode = HudMode.MINI_HOTBAR;
+    // "Mend any item in the inventory" — ambient XP mending across the whole
+    // vanilla inventory, not just equipped/grafted. Default ON (the feature is
+    // the point; equip + pocket mending are separate always-on graft opt-ins).
+    // Gates only the vanilla-inventory mend provider, read server-side.
+    private static boolean mendInventoryItems = true;
 
     private static boolean loaded = false;
 
@@ -64,6 +69,7 @@ public final class IMConfig {
             JsonObject root = JsonParser.parseString(json).getAsJsonObject();
             pocketCyclerEnabled = readBool(root, "pocketCyclerEnabled", pocketCyclerEnabled);
             pocketHudMode = HudMode.fromName(readString(root, "pocketHudMode", null), pocketHudMode);
+            mendInventoryItems = readBool(root, "mendInventoryItems", mendInventoryItems);
             InventoryMax.LOGGER.info("[config] loaded from {}", path);
         } catch (IOException | JsonSyntaxException | IllegalStateException e) {
             InventoryMax.LOGGER.error("[config] failed to read {} — using defaults", path, e);
@@ -88,6 +94,7 @@ public final class IMConfig {
             root.addProperty("version", CURRENT_VERSION);
             root.addProperty("pocketCyclerEnabled", pocketCyclerEnabled);
             root.addProperty("pocketHudMode", pocketHudMode.name());
+            root.addProperty("mendInventoryItems", mendInventoryItems);
             Files.writeString(path, GSON.toJson(root));
         } catch (IOException e) {
             InventoryMax.LOGGER.error("[config] failed to write {} — changes won't persist", path, e);
@@ -99,4 +106,7 @@ public final class IMConfig {
 
     public static HudMode pocketHudMode() { return pocketHudMode; }
     public static void setPocketHudMode(HudMode v) { pocketHudMode = v; save(); }
+
+    public static boolean mendInventoryItems() { return mendInventoryItems; }
+    public static void setMendInventoryItems(boolean v) { mendInventoryItems = v; save(); }
 }

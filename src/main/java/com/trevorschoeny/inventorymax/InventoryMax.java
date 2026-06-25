@@ -2,11 +2,13 @@ package com.trevorschoeny.inventorymax;
 
 import com.trevorschoeny.inventorymax.containerlocks.ContainerLocks;
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
+import com.trevorschoeny.inventorymax.mending.InventoryMendingProvider;
 import com.trevorschoeny.inventorymax.pocket.PocketEvictC2S;
 import com.trevorschoeny.inventorymax.pocket.PocketQuickMoveC2S;
 import com.trevorschoeny.inventorymax.pocket.PocketRotateC2S;
 import com.trevorschoeny.inventorymax.pocket.PocketServerOps;
 import com.trevorschoeny.inventorymax.pocket.Pockets;
+import com.trevorschoeny.menukit.core.MendingCandidates;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -81,6 +83,12 @@ public class InventoryMax implements ModInitializer {
             }
         });
 
-        LOGGER.info("[inventorymax] Common init — pocket + equipment storage + networking registered.");
+        // "Mend any item in the inventory" — feed the vanilla inventory into MKC's
+        // XP-repair pool via the mending primitive's consumer hook (gated by the
+        // IMConfig toggle, default on). Equip slots + pockets opt in separately at
+        // the graft level.
+        MendingCandidates.register(InventoryMendingProvider.INSTANCE);
+
+        LOGGER.info("[inventorymax] Common init — pocket + equipment storage + networking + mending registered.");
     }
 }

@@ -28,12 +28,12 @@ public final class IMConfigScreen {
     public static Screen create(Screen parent) {
         return YetAnotherConfigLib.createBuilder()
                 .title(Component.literal("Inventory Max"))
-                .category(pocketCyclerCategory())
+                .category(imCategory())
                 .build()
                 .generateScreen(parent);
     }
 
-    private static ConfigCategory pocketCyclerCategory() {
+    private static ConfigCategory imCategory() {
         Option<Boolean> enabled = booleanOption(
                 "Enable Pocket Cycler",
                 "Adds server-persistent pocket slots above your hotbar slots. "
@@ -72,6 +72,24 @@ public final class IMConfigScreen {
         return ConfigCategory.createBuilder()
                 .name(Component.literal("IM"))
                 .group(group.build())
+                .group(mendingGroup())
+                .build();
+    }
+
+    private static OptionGroup mendingGroup() {
+        Option<Boolean> mendInv = booleanOption(
+                "Mend any item in inventory",
+                "When you collect XP, a damaged Mending item repairs even while just "
+                        + "sitting in your inventory — not only when held or worn. "
+                        + "(Equipment slots and pockets always mend, separately.)",
+                true,
+                IMConfig::mendInventoryItems,
+                IMConfig::setMendInventoryItems);
+        return OptionGroup.createBuilder()
+                .name(Component.literal("Mending"))
+                .description(OptionDescription.of(Component.literal(
+                        "Ambient XP mending across your whole inventory.")))
+                .option(mendInv)
                 .build();
     }
 
