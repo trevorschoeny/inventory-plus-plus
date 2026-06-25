@@ -1,15 +1,19 @@
 package com.trevorschoeny.inventorymax;
 
+import com.trevorschoeny.inventoryplus.cyclable.HotbarCyclableRegistry;
 import com.trevorschoeny.inventoryplus.lockedslots.LockedSlots;
 import com.trevorschoeny.inventorymax.config.IMConfig;
 import com.trevorschoeny.inventorymax.config.IMKeybinds;
 import com.trevorschoeny.inventorymax.containerlocks.ContainerLockProvider;
+import com.trevorschoeny.inventorymax.equipment.EquipAutoRestock;
 import com.trevorschoeny.inventorymax.equipment.EquipHud;
+import com.trevorschoeny.inventorymax.pocket.PocketCyclable;
 import com.trevorschoeny.inventorymax.pocket.PocketCyclerHudSource;
 import com.trevorschoeny.inventorymax.pocket.PocketInput;
 import com.trevorschoeny.inventorymax.pocket.PocketState;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 /**
  * Client entrypoint for Inventory Max. Wires Pocket Cycler's client
@@ -31,8 +35,15 @@ public class InventoryMaxClient implements ClientModInitializer {
         // Contribute pockets to IP's shared cycle HUD (the generalization
         // paying off — one HUD, both cyclers).
         PocketCyclerHudSource.register();
+        // Register pockets as a hotbar cycler so Auto Tool Switch + Auto-Restock
+        // can source tools from them (Tier 2 dynamic switch) — the search/cycle
+        // sibling of PocketCyclerHudSource's render contribution.
+        HotbarCyclableRegistry.register(PocketCyclable.INSTANCE);
         // Equipment-slot HUD cue — elytra + totem icons to the left of the hotbar.
         EquipHud.register();
+        // Auto-restock the totem slot from inventory after a death save (composes
+        // IP's auto-restock search; follows the auto-restock toggle).
+        ClientTickEvents.END_CLIENT_TICK.register(EquipAutoRestock::tick);
 
         // Plug Container Locks into IP's client-side lock seam, so IP's unified
         // lock-check / edit UI / icon / sort+move-matching skip recognize placed

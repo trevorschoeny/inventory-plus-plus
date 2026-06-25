@@ -1,8 +1,10 @@
 package com.trevorschoeny.inventorymax.pocket;
 
+import com.trevorschoeny.menukit.core.MenuKitSlot;
 import com.trevorschoeny.menukit.core.Storage;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -47,6 +49,43 @@ public final class PocketServerOps {
         sp.getInventory().setItem(hotbar, out[count]);
         pockets.markDirty();
         sp.inventoryMenu.broadcastChanges();
+    }
+
+    /**
+     * Quick-move a single pocket's content out toward its natural destination
+     * — the non-held restock path. Runs the authoritative
+     * {@code quickMoveStack} from the pocket's (always-active, server-side)
+     * slot, letting the existing routing carry it: vanilla equips armor to the
+     * matching empty armor slot; {@code InventoryMenuQuickMoveMixin} routes a
+     * totem/elytra to its equipment graft. {@code broadcastChanges} syncs the
+     * result back to the client (whose pocket slot may be inert).
+     *
+     * <p>No-op when the pocket slot can't be found (graft absent) — the move
+     * simply doesn't happen, same failure mode as a missing replacement.
+     */
+    public static void quickMove(ServerPlayer sp, int hotbar, int depth) {
+        if (sp == null || hotbar < 0 || hotbar >= Pockets.HOTBAR_SLOTS) return;
+        if (depth < 0 || depth >= Pockets.MAX_PER_SLOT) return;
+        AbstractContainerMenu menu = sp.inventoryMenu;
+        int idx = findPocketSlotIndex(menu, hotbar, depth);
+        if (idx < 0) return;
+        menu.quickMoveStack(sp, idx);
+        menu.broadcastChanges();
+    }
+
+    /**
+     * Menu-slot index of the pocket graft for {@code (hotbar, depth)} in
+     * {@code menu}, matched by its MenuKit group id, or {@code -1} if absent.
+     * Mirrors {@code InventoryMenuQuickMoveMixin}'s graft-slot lookup.
+     */
+    private static int findPocketSlotIndex(AbstractContainerMenu menu, int hotbar, int depth) {
+        String groupId = Pockets.groupId(hotbar, depth);
+        for (int k = 0; k < menu.slots.size(); k++) {
+            if (menu.slots.get(k) instanceof MenuKitSlot mk && groupId.equals(mk.getGroupId())) {
+                return k;
+            }
+        }
+        return -1;
     }
 
     /**
