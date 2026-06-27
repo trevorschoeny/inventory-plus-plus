@@ -6,7 +6,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
  * Geometry for the +/− resize buttons, which live in their own small panel
  * <b>just below</b> the hotbar slot (separate from the pockets panel above).
  * Because that space has no vanilla slots, the buttons are reliably clickable
- * regardless of the grafted-slot overlap issue affecting the pockets above.
+ * regardless of the registered-slot overlap issue affecting the pockets above.
  *
  * <p>Shared by the render helper (to draw) and the click mixin (to hit-test)
  * so the two never disagree. Coordinates are screen-absolute.

@@ -1,7 +1,7 @@
 package com.trevorschoeny.inventorymax.mixin;
 
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
-import com.trevorschoeny.menukit.core.MenuKitSlot;
+import com.trevorschoeny.menukit.core.MKCSlot;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Shift-click (quick-move) routing for the equipment slots — the consumer work
- * the graft kit leaves to us (MenuKit's {@code quickMoveStack} knows nothing of
- * grafted slots). Runs server-side for the authoritative move and client-side
+ * the slot kit leaves to us (MenuKit's {@code quickMoveStack} knows nothing of
+ * registered slots). Runs server-side for the authoritative move and client-side
  * for prediction. Creative slot sync is the library's job (§0051) — its
- * creative-set-slot bridge routes placements into grafted slots — so this mixin
+ * creative-set-slot bridge routes placements into registered slots — so this mixin
  * does not special-case creative.
  *
  * <p>Rules (Trev, 2026-06-17), all gated on the equipment slots being present:
@@ -91,10 +91,10 @@ public abstract class InventoryMenuQuickMoveMixin {
         // Anything else (chestplates, ordinary items, a 2nd totem) → vanilla.
     }
 
-    /** Menu index of the grafted equipment slot in {@code groupId}, or -1. */
+    /** Menu index of the registered equipment slot in {@code groupId}, or -1. */
     private static int inventoryMax$findEquip(AbstractContainerMenu menu, String groupId) {
         for (int k = 0; k < menu.slots.size(); k++) {
-            if (menu.slots.get(k) instanceof MenuKitSlot mk && groupId.equals(mk.getGroupId())) {
+            if (menu.slots.get(k) instanceof MKCSlot mk && groupId.equals(mk.getGroupId())) {
                 return k;
             }
         }

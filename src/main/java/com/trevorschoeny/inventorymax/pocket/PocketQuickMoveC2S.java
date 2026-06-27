@@ -18,7 +18,7 @@ import net.minecraft.resources.Identifier;
  * pocket slots are always active, so the server can run the real
  * {@code quickMoveStack} from the pocket slot and let the existing routing
  * (vanilla for armor, {@code InventoryMenuQuickMoveMixin} for the totem/elytra
- * equipment grafts) carry the item to the right destination, then
+ * equipment slots) carry the item to the right destination, then
  * {@code broadcastChanges} syncs it back.
  *
  * <p>Held-tool restock does <b>not</b> use this — that's the dynamic-switch

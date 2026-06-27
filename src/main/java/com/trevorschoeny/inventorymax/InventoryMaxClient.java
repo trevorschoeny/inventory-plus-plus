@@ -22,10 +22,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
  * surface: config, keybinds, per-world count state, input dispatch, and the
  * pocket source for IP's shared cycle HUD.
  *
- * <p>The graft mixins (slot construction) activate via {@code mixins.json}; the
- * grafted slots' on-screen presence — render, hover, click, reveal across
+ * <p>The slot mixins (slot construction) activate via {@code mixins.json}; the
+ * registered slots' on-screen presence — render, hover, click, reveal across
  * survival <em>and</em> creative — is the library's, wired through the
- * {@code GraftScreenPresence}s registered below. The shared HUD panel itself is
+ * {@code SlotScreenPresence}s registered below. The shared HUD panel itself is
  * registered by IP (this just contributes a source into IP's
  * {@code CycleHudRegistry}).
  */
@@ -47,9 +47,9 @@ public class InventoryMaxClient implements ClientModInitializer {
         // Equipment-slot HUD cue — elytra + totem icons to the left of the hotbar.
         EquipHud.register();
         // Screen presence: the library draws + hover/click-routes + reveals the
-        // grafted pocket + equipment slots on every inventory-bearing screen
-        // (creative included) via MenuKit's graft dispatch. Replaces the old
-        // per-screen render/click mixins; we register the grafts' presences here.
+        // registered pocket + equipment slots on every inventory-bearing screen
+        // (creative included) via MenuKit's slot dispatch. Replaces the old
+        // per-screen render/click mixins; we register the slots' presences here.
         PocketScreenPresence.register();
         EquipScreenPresence.register();
         // Auto-restock the totem slot from inventory after a death save (composes

@@ -21,10 +21,10 @@ import net.minecraft.world.item.Items;
  * elytra <em>and</em> a chestplate, or keep a totem ready <em>and</em> hold
  * something in the offhand.
  *
- * <p>These are <b>grafted menu slots backed by a player attachment</b> (the
+ * <p>These are <b>registered menu slots backed by a player attachment</b> (the
  * proven §0045 Pocket Cycler kit), <b>not</b> new vanilla {@code EquipmentSlot}s
  * — the equipment enum can't be extended cleanly, and doing so would be fragile
- * + against §0030. The consequence: a grafted-attachment slot is invisible to
+ * + against §0030. The consequence: a registered-attachment slot is invisible to
  * vanilla's equipment iteration, so it piggybacks on nothing for free. Every
  * vanilla mechanic the slots need (glide, totem, render, mending, binding,
  * death-drop) is taught to <em>also</em> consult the extra slot via one narrow,
@@ -35,7 +35,7 @@ import net.minecraft.world.item.Items;
  *
  * A 2-slot player attachment (index {@link #ELYTRA_INDEX} / {@link #TOTEM_INDEX})
  * survives logout/restart/death (§0034), synced for free via vanilla's slot
- * protocol. Declared at common init, bound by the graft mixin.
+ * protocol. Declared at common init, bound by the slot mixin.
  */
 public final class EquipmentSlots {
 
@@ -46,18 +46,18 @@ public final class EquipmentSlots {
     /** Backing-storage slot indices. */
     public static final int ELYTRA_INDEX = 0;
     public static final int TOTEM_INDEX = 1;
-    /** Total grafted equipment slots. */
+    /** Total registered equipment slots. */
     public static final int TOTAL = 2;
 
-    /** Unique graft panel/group ids. */
+    /** Unique slot panel/group ids. */
     public static final String ELYTRA_GROUP = "equip_elytra";
     public static final String TOTEM_GROUP = "equip_totem";
 
     // ─── Screen-relative layout (frame top-left, added to leftPos/topPos) ──
     //
     // The slots stack directly above the vanilla offhand slot. Vanilla draws
-    // the offhand at item (77, 62) → its 18px frame sits at (76, 61). A grafted
-    // slot's graftX/Y is its frame top-left (the render helper draws the frame
+    // the offhand at item (77, 62) → its 18px frame sits at (76, 61). A registered
+    // slot's renderX/Y is its frame top-left (the render helper draws the frame
     // there and insets the 16px item by 1px), so we use frame coords here, 1px
     // up-left of the item, exactly like the Pocket column aligns to the hotbar.
     // Pixel-tunable — Trev nudged the pockets by a px; same is expected here.
@@ -72,12 +72,12 @@ public final class EquipmentSlots {
     // No creative-specific coordinates: EquipScreenPresence anchors both slots to
     // the real offhand via MenuKit's VanillaSlotResolver, which resolves the
     // offhand's live position on the survival inventory AND the creative tab. The
-    // SLOT_X/ELYTRA_Y/TOTEM_Y above remain only as the graft's construction seed
-    // (InventoryMenuEquipmentGraftMixin); the per-frame position is resolved.
+    // SLOT_X/ELYTRA_Y/TOTEM_Y above remain only as the slot's construction seed
+    // (InventoryMenuEquipmentMixin); the per-frame position is resolved.
 
     /**
      * Player-attached equipment content — 2 slots, survives logout/restart
-     * (§0034). Declared at common init; the graft slices this per slot.
+     * (§0034). Declared at common init; the slot slices this per slot.
      */
     public static StorageAttachment<Player, NonNullList<ItemStack>> EQUIPMENT;
 
@@ -88,7 +88,7 @@ public final class EquipmentSlots {
 
     // ─── Behavior reads ──────────────────────────────────────────────────
     // The passive-behavior mixins (glide, totem, …) read the slot contents
-    // directly off the player attachment — the same storage the menu graft
+    // directly off the player attachment — the same storage the menu slot
     // binds, so survival/creative/menu-closed all see one source of truth.
 
     /** The elytra in the equipment elytra slot, or EMPTY. */

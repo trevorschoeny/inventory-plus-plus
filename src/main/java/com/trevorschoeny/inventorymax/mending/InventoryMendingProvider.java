@@ -14,7 +14,7 @@ import java.util.List;
  * Inventory Max's "mend any item in the inventory" feature — feeds the player's
  * whole vanilla inventory into MenuKit-Containers' XP-repair pool via the
  * {@link MendingCandidates} hook, so a damaged Mending item repairs while just
- * sitting in your pack, not only when equipped or in a grafted slot.
+ * sitting in your pack, not only when equipped or in a registered slot.
  *
  * <p>Rides MKC's single {@code ExperienceOrb} intercept (no dueling mixin). MKC
  * applies the candidate predicate itself (damaged AND carries {@code REPAIR_WITH_XP}),
@@ -25,7 +25,7 @@ import java.util.List;
  * slot</b> — that's the main hand, which vanilla already mends; skipping it keeps
  * it from appearing twice in the unified pool. Offhand and armor aren't in 0–35
  * and are likewise vanilla's already. The equip slots and pockets opt in
- * separately at the graft level ({@code mendsFromXp()}, always on); this is the
+ * separately at the slot level ({@code mendsFromXp()}, always on); this is the
  * toggleable vanilla-inventory layer.
  *
  * <h3>Server-side</h3>

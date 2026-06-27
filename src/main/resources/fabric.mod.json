@@ -3,7 +3,7 @@
   "id": "inventorymax",
   "version": "1.0.0",
   "name": "Inventory Max",
-  "description": "Server-cooperative companion to Inventory Plus (§0005). Adds Pocket Cycler — server-persistent pocket slots grafted onto the vanilla inventory via MenuKit's §0045 slot-graft kit. Purely additive over IP.",
+  "description": "Server-cooperative companion to Inventory Plus (§0005). Adds Pocket Cycler — server-persistent pocket slots added to the vanilla inventory via MenuKit's §0045 slot kit. Purely additive over IP.",
   "authors": ["trevorschoeny"],
   "license": "MIT",
   "environment": "*",

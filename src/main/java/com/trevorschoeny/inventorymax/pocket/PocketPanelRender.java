@@ -17,8 +17,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
  *       (− at 0 pockets, + at 3).</li>
  * </ul>
  *
- * <p>The grafted slot frames + items are drawn by MenuKit's
- * {@code MenuKitGraftRender} between the background and button passes.
+ * <p>The registered slot frames + items are drawn by MenuKit's
+ * {@code MKCSlotRender} between the background and button passes.
  */
 public final class PocketPanelRender {
 
@@ -34,7 +34,7 @@ public final class PocketPanelRender {
     private static final int GLYPH_DISABLED = 0xFF5A5A5A;
 
     /**
-     * Raised pockets-panel backing — drawn BEFORE the grafted slot frames. Spans
+     * Raised pockets-panel backing — drawn BEFORE the registered slot frames. Spans
      * the floating horizontal row (centered over the hovered hotbar slot), so it
      * widens as pockets are added and stays centered.
      */

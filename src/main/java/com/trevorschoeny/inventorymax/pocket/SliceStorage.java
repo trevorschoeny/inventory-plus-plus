@@ -9,12 +9,12 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * A fixed-length window onto a larger backing {@link Storage} — used to give
- * each (hotbar, depth) pocket graft its own 1-slot view of the shared 27-slot
+ * each (hotbar, depth) pocket slot its own 1-slot view of the shared 27-slot
  * {@link Pockets#POCKETS} attachment.
  *
  * <h3>Advancement parity (§0045 Gap 3 — consumer-owned)</h3>
  *
- * Grafted slots back a separate container, so they don't feed vanilla's
+ * RegisteredSlots slots back a separate container, so they don't feed vanilla's
  * {@code InventoryChangeTrigger} automatically the way real inventory slots
  * do. MenuKit deliberately ships no advancement API (narrow surface). So we
  * fire the trigger ourselves: on a <b>server-side</b> write of a non-empty

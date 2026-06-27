@@ -1,10 +1,10 @@
 package com.trevorschoeny.inventorymax.pocket;
 
 /**
- * Server-safe reveal/hover state for pockets, read by each graft's
+ * Server-safe reveal/hover state for pockets, read by each slot's
  * {@code revealWhen} predicate.
  *
- * <p><b>No client imports — by design.</b> The graft mixin runs on both sides
+ * <p><b>No client imports — by design.</b> The slot mixin runs on both sides
  * and captures {@code () -> PocketHoverState.isRevealed(n, d)} as the reveal
  * predicate. MenuKit only evaluates it on the client (the server keeps slots
  * visible so content syncs), but the lambda is constructed on the server too —

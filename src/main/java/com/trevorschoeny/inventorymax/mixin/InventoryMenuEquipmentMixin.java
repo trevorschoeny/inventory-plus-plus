@@ -3,7 +3,7 @@ package com.trevorschoeny.inventorymax.mixin;
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
 import com.trevorschoeny.inventorymax.pocket.SliceStorage;
 import com.trevorschoeny.menukit.core.InteractionPolicy;
-import com.trevorschoeny.menukit.core.MenuKitGraft;
+import com.trevorschoeny.menukit.core.MKCSlots;
 import com.trevorschoeny.menukit.core.Storage;
 
 import net.minecraft.world.entity.player.Inventory;
@@ -17,13 +17,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * The consumer-owned equipment-slot graft (§0045) — sibling to
- * {@link InventoryMenuPocketGraftMixin}. Injects at the TAIL of
- * {@link InventoryMenu}'s constructor and grafts two fixed, always-visible,
+ * The consumer-owned equipment-slot slot (§0045) — sibling to
+ * {@link InventoryMenuPocketMixin}. Injects at the TAIL of
+ * {@link InventoryMenu}'s constructor and slots two fixed, always-visible,
  * type-filtered slots stacked above the offhand: an elytra slot and a totem
  * slot.
  *
- * <p>Two separate grafts because the slots accept different items — each needs
+ * <p>Two separate slots because the slots accept different items — each needs
  * its own {@link InteractionPolicy} (and therefore its own group). Each is
  * capped to a single item via {@code withMaxStackSize(1)} (a totem otherwise
  * stacks to 64; one per slot is the intent). Content is a 1-slot window onto the
@@ -33,20 +33,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * <p>Unlike pockets there is no reveal predicate and no runtime reposition — the
  * slots are always visible at a fixed spot. Running at the constructor TAIL means
- * the graft re-applies on every menu rebuild (login, respawn, dimension change)
+ * the slot re-applies on every menu rebuild (login, respawn, dimension change)
  * on both sides — no lifecycle hook.
  */
 @Mixin(InventoryMenu.class)
-public abstract class InventoryMenuEquipmentGraftMixin {
+public abstract class InventoryMenuEquipmentMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void inventoryMax$graftEquipment(Inventory inv, boolean active,
+    private void inventoryMax$addEquipmentSlots(Inventory inv, boolean active,
                                                   Player player, CallbackInfo ci) {
         Storage backing = EquipmentSlots.EQUIPMENT.bind(player);
         AbstractContainerMenu menu = (AbstractContainerMenu) (Object) this;
 
         // Elytra slot (top) — accepts only elytra, one item.
-        MenuKitGraft.onto(menu, player)
+        MKCSlots.onto(menu, player)
                 .panel(EquipmentSlots.MOD_ID + ":" + EquipmentSlots.ELYTRA_GROUP)
                 .group(EquipmentSlots.ELYTRA_GROUP)
                 .storage(new SliceStorage(backing, EquipmentSlots.ELYTRA_INDEX, 1, player))
@@ -58,12 +58,12 @@ public abstract class InventoryMenuEquipmentGraftMixin {
                 // §0052). The §0053 MKC primitive — equipment-semantic opt-in.
                 .bindsCursedItems()
                 // Mending: a damaged Mending elytra here repairs from XP orbs
-                // like worn armor — the MKC mending primitive's per-graft opt-in.
+                // like worn armor — the MKC mending primitive's per-slot opt-in.
                 .mendsFromXp()
-                .graft();
+                .register();
 
         // Totem slot (bottom, just above the offhand) — accepts only totems, one item.
-        MenuKitGraft.onto(menu, player)
+        MKCSlots.onto(menu, player)
                 .panel(EquipmentSlots.MOD_ID + ":" + EquipmentSlots.TOTEM_GROUP)
                 .group(EquipmentSlots.TOTEM_GROUP)
                 .storage(new SliceStorage(backing, EquipmentSlots.TOTEM_INDEX, 1, player))
@@ -77,6 +77,6 @@ public abstract class InventoryMenuEquipmentGraftMixin {
                 // none will ever qualify (mendable = damaged + Mending) — harmless,
                 // and future-proofs a modded damageable totem-like item.
                 .mendsFromXp()
-                .graft();
+                .register();
     }
 }

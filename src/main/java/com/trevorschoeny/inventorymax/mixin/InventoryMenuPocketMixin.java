@@ -3,7 +3,7 @@ package com.trevorschoeny.inventorymax.mixin;
 import com.trevorschoeny.inventorymax.pocket.PocketHoverState;
 import com.trevorschoeny.inventorymax.pocket.Pockets;
 import com.trevorschoeny.inventorymax.pocket.SliceStorage;
-import com.trevorschoeny.menukit.core.MenuKitGraft;
+import com.trevorschoeny.menukit.core.MKCSlots;
 import com.trevorschoeny.menukit.core.Storage;
 
 import net.minecraft.world.entity.player.Inventory;
@@ -17,24 +17,24 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * The consumer-owned pocket graft (§0045). Injects at the TAIL of
- * {@link InventoryMenu}'s constructor and grafts the maximum pocket set —
- * a 1-slot graft for every (hotbar slot, depth) pair, 27 in all.
+ * The consumer-owned pocket slot (§0045). Injects at the TAIL of
+ * {@link InventoryMenu}'s constructor and slots the maximum pocket set —
+ * a 1-slot slot for every (hotbar slot, depth) pair, 27 in all.
  *
- * <p>Each graft is its own panel with its own reveal predicate keyed to
+ * <p>Each slot is its own panel with its own reveal predicate keyed to
  * {@link PocketHoverState#isRevealed(int, int)}, which gives per-depth reveal
  * granularity (the panel-level reveal API alone can't show 1-of-3). All 27
  * slots always exist server-side (so content syncs + persists); the client
  * reveals only the configured count per hotbar slot.
  *
- * <p>Running at the constructor TAIL means the graft re-applies on every menu
+ * <p>Running at the constructor TAIL means the slot re-applies on every menu
  * rebuild (login, respawn, dimension change) on both sides — no lifecycle hook.
  */
 @Mixin(InventoryMenu.class)
-public abstract class InventoryMenuPocketGraftMixin {
+public abstract class InventoryMenuPocketMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void inventoryMax$graftPockets(Inventory inv, boolean active,
+    private void inventoryMax$addPocketSlots(Inventory inv, boolean active,
                                                  Player player, CallbackInfo ci) {
         Storage backing = Pockets.POCKETS.bind(player);
         AbstractContainerMenu menu = (AbstractContainerMenu) (Object) this;
@@ -47,7 +47,7 @@ public abstract class InventoryMenuPocketGraftMixin {
                 // also fires the advancement trigger on server-side writes.
                 Storage slice = new SliceStorage(
                         backing, Pockets.flatIndex(n, d), 1, player);
-                MenuKitGraft.onto(menu, player)
+                MKCSlots.onto(menu, player)
                         .panel("inventorymax:" + Pockets.groupId(n, d))
                         .group(Pockets.groupId(n, d))
                         .storage(slice)
@@ -59,7 +59,7 @@ public abstract class InventoryMenuPocketGraftMixin {
                         // pocket repairs from XP orbs. Server-side all pockets are
                         // active, so this works regardless of client reveal state.
                         .mendsFromXp()
-                        .graft();
+                        .register();
             }
         }
     }

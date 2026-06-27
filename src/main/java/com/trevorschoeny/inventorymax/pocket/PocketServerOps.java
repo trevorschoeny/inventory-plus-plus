@@ -1,6 +1,6 @@
 package com.trevorschoeny.inventorymax.pocket;
 
-import com.trevorschoeny.menukit.core.MenuKitSlot;
+import com.trevorschoeny.menukit.core.MKCSlot;
 import com.trevorschoeny.menukit.core.Storage;
 
 import net.minecraft.server.level.ServerPlayer;
@@ -57,10 +57,10 @@ public final class PocketServerOps {
      * {@code quickMoveStack} from the pocket's (always-active, server-side)
      * slot, letting the existing routing carry it: vanilla equips armor to the
      * matching empty armor slot; {@code InventoryMenuQuickMoveMixin} routes a
-     * totem/elytra to its equipment graft. {@code broadcastChanges} syncs the
+     * totem/elytra to its equipment slot. {@code broadcastChanges} syncs the
      * result back to the client (whose pocket slot may be inert).
      *
-     * <p>No-op when the pocket slot can't be found (graft absent) — the move
+     * <p>No-op when the pocket slot can't be found (slot absent) — the move
      * simply doesn't happen, same failure mode as a missing replacement.
      */
     public static void quickMove(ServerPlayer sp, int hotbar, int depth) {
@@ -74,14 +74,14 @@ public final class PocketServerOps {
     }
 
     /**
-     * Menu-slot index of the pocket graft for {@code (hotbar, depth)} in
+     * Menu-slot index of the pocket slot for {@code (hotbar, depth)} in
      * {@code menu}, matched by its MenuKit group id, or {@code -1} if absent.
-     * Mirrors {@code InventoryMenuQuickMoveMixin}'s graft-slot lookup.
+     * Mirrors {@code InventoryMenuQuickMoveMixin}'s slot-slot lookup.
      */
     private static int findPocketSlotIndex(AbstractContainerMenu menu, int hotbar, int depth) {
         String groupId = Pockets.groupId(hotbar, depth);
         for (int k = 0; k < menu.slots.size(); k++) {
-            if (menu.slots.get(k) instanceof MenuKitSlot mk && groupId.equals(mk.getGroupId())) {
+            if (menu.slots.get(k) instanceof MKCSlot mk && groupId.equals(mk.getGroupId())) {
                 return k;
             }
         }

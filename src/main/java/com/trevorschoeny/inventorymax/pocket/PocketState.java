@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Client-side, per-world pocket <b>count</b> state: how many pockets (0–3) are
  * attached to each of the 9 hotbar slots. This is the structure layer of the
- * §0045 fixed-graft composition — the 27 slots always exist server-side; this
+ * §0045 fixed-slot composition — the 27 slots always exist server-side; this
  * decides how many of each hotbar slot's 3 are revealed + interactive.
  *
  * <p>Client-side + per-world (mirrors Column Cycler's slot membership): players
@@ -31,7 +31,7 @@ import java.util.Map;
  * the server doesn't track it (rotation/eviction payloads carry the count).
  * Persisted to {@code config/inventorymax/pockets.json}.
  *
- * <p>Pushes counts into the server-safe {@link PocketHoverState} so the graft's
+ * <p>Pushes counts into the server-safe {@link PocketHoverState} so the slot's
  * reveal predicate sees them.
  */
 public final class PocketState {

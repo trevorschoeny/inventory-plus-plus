@@ -43,8 +43,8 @@ public final class IMConfig {
     // MINI_HOTBAR, matching Column Cycler.
     private static HudMode pocketHudMode = HudMode.MINI_HOTBAR;
     // "Mend any item in the inventory" — ambient XP mending across the whole
-    // vanilla inventory, not just equipped/grafted. Default ON (the feature is
-    // the point; equip + pocket mending are separate always-on graft opt-ins).
+    // vanilla inventory, not just equipped/registered. Default ON (the feature is
+    // the point; equip + pocket mending are separate always-on slot opt-ins).
     // Gates only the vanilla-inventory mend provider, read server-side.
     private static boolean mendInventoryItems = true;
 

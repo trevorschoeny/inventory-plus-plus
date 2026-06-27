@@ -19,7 +19,7 @@ import java.util.List;
  * Auto-restock for the equipment totem slot — when the slot's totem is consumed
  * by a death save, slide another totem in from the inventory so one is always
  * ready. Composes Inventory Plus's {@link AutoRestockSearch} (IM→IP, allowed); IM
- * owns the move into its own grafted slot via the shift-click routing we already
+ * owns the move into its own registered slot via the shift-click routing we already
  * built.
  *
  * <p>Client tick, mirroring IP's own auto-restock. Fires only on the consume

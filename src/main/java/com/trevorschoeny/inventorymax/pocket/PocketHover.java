@@ -21,7 +21,7 @@ public final class PocketHover {
 
     public static void updateHover(AbstractContainerMenu menu, int leftPos, int topPos,
                                    double mouseX, double mouseY) {
-        // Keep the server-safe counts current for the graft reveal predicate.
+        // Keep the server-safe counts current for the slot reveal predicate.
         PocketState.pushAll();
 
         if (!IMConfig.pocketCyclerEnabled()) {

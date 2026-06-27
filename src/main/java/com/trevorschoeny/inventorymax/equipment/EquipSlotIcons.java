@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
  * Empty-slot placeholder icons for the equipment slots — the faint elytra/totem
  * silhouettes shown when a slot is empty, mirroring vanilla's armor-slot ghosts.
  *
- * <p><b>Why we draw these ourselves.</b> MenuKit owns grafted-slot rendering, but
+ * <p><b>Why we draw these ourselves.</b> MenuKit owns registered-slot rendering, but
  * which placeholder belongs on which slot is consumer knowledge, so we draw over
  * its exposed slot primitives (§0045: library exposes the capability, consumer
  * applies it). MenuKit's {@link SlotRendering#drawGhostIcon} dims to 40% (for
@@ -33,7 +33,7 @@ public final class EquipSlotIcons {
     public static final Identifier TOTEM =
             Identifier.fromNamespaceAndPath(EquipmentSlots.MOD_ID, "container/slot/totem");
 
-    /** The placeholder for a graft group, or {@code null} if it isn't an equip slot. */
+    /** The placeholder for a slot group, or {@code null} if it isn't an equip slot. */
     public static Identifier spriteFor(String groupId) {
         if (EquipmentSlots.ELYTRA_GROUP.equals(groupId)) return ELYTRA;
         if (EquipmentSlots.TOTEM_GROUP.equals(groupId)) return TOTEM;

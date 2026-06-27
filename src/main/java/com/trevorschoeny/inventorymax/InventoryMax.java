@@ -21,11 +21,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Common (both-sides) entrypoint for Inventory Max (§0005) — the
- * server-cooperative companion to IP. Universal: the pocket graft runs on the
+ * server-cooperative companion to IP. Universal: the pocket slot runs on the
  * server (to hold + persist content) and the client (to render + interact).
  *
  * <p>v1 ships the first IM feature: <b>Pocket Cycler</b> — server-persistent
- * pocket slots grafted onto the vanilla inventory via MenuKit's §0045 graft
+ * pocket slots registered onto the vanilla inventory via MenuKit's §0045 slot
  * kit. Per §0005, IM is purely additive over IP.
  */
 public class InventoryMax implements ModInitializer {
@@ -42,12 +42,12 @@ public class InventoryMax implements ModInitializer {
 
         // Register the player-attached pocket content storage (27 slots).
         // Must happen on both sides before any InventoryMenu is constructed,
-        // so the graft mixin can bind it.
+        // so the slot mixin can bind it.
         Pockets.register();
 
         // Register the player-attached equipment content storage (2 slots:
         // elytra + totem). Same constraint — must precede any InventoryMenu
-        // construction so the equipment graft mixin can bind it.
+        // construction so the equipment slot mixin can bind it.
         EquipmentSlots.register();
 
         // C2S payload types — registered on both sides (the codec must be
@@ -86,7 +86,7 @@ public class InventoryMax implements ModInitializer {
         // "Mend any item in the inventory" — feed the vanilla inventory into MKC's
         // XP-repair pool via the mending primitive's consumer hook (gated by the
         // IMConfig toggle, default on). Equip slots + pockets opt in separately at
-        // the graft level.
+        // the slot level.
         MendingCandidates.register(InventoryMendingProvider.INSTANCE);
 
         LOGGER.info("[inventorymax] Common init — pocket + equipment storage + networking + mending registered.");

@@ -12,8 +12,8 @@
     "EquipmentGlideMixin",
     "EquipmentTotemMixin",
     "HopperLockEnforcementMixin",
-    "InventoryMenuEquipmentGraftMixin",
-    "InventoryMenuPocketGraftMixin",
+    "InventoryMenuEquipmentMixin",
+    "InventoryMenuPocketMixin",
     "InventoryMenuQuickMoveMixin"
   ],
   "client": [
