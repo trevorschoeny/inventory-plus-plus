@@ -1,5 +1,7 @@
 package com.trevorschoeny.inventorymax.equipment;
 
+import com.trevorschoeny.inventorymax.config.IMConfig;
+
 import com.trevorschoeny.menukit.core.ItemDisplay;
 import com.trevorschoeny.menukit.core.PanelStyle;
 import com.trevorschoeny.menukit.hud.MKHudAnchor;
@@ -42,7 +44,8 @@ public final class EquipHud {
                 .padding(0).autoSize()
                 .style(PanelStyle.NONE)
                 .showInScreen() // persist like a status cue — don't vanish when a screen opens
-                .showWhen(() -> !elytraCue().isEmpty() || !totemCue().isEmpty())
+                .showWhen(() -> IMConfig.equipmentSlotsEnabled() && IMConfig.equipmentHudCue()
+                        && (!elytraCue().isEmpty() || !totemCue().isEmpty()))
                 .element(new ItemDisplay(0, 0, ICON_SIZE, EquipHud::elytraCue, false, false))
                 .element(new ItemDisplay(0, ICON_PITCH, ICON_SIZE, EquipHud::totemCue, false, false))
                 .build();

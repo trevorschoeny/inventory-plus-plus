@@ -1,5 +1,6 @@
 package com.trevorschoeny.inventorymax.mixin;
 
+import com.trevorschoeny.inventorymax.config.IMConfig;
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
 import com.trevorschoeny.inventorymax.pocket.SliceStorage;
 import com.trevorschoeny.menukit.core.MKCSlots;
@@ -30,10 +31,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * {@link SliceStorage}, which also fires the advancement trigger on server-side
  * writes (so picking up an elytra into the slot still earns "Sky's the Limit").
  *
- * <p>Unlike pockets there is no reveal predicate and no runtime reposition — the
- * slots are always visible at a fixed spot. Running at the constructor TAIL means
- * the slot re-applies on every menu rebuild (login, respawn, dimension change)
- * on both sides — no lifecycle hook.
+ * <p>Unlike pockets there is no hover reveal and no runtime reposition — the
+ * slots are always visible at a fixed spot <em>while the feature is enabled</em>:
+ * the reveal predicate is the Equipment Slots config toggle (side-aware, same
+ * model as pockets — the server keeps the content syncing; the client hides and
+ * inerts the slots when toggled off, content persists). Running at the
+ * constructor TAIL means the slot re-applies on every menu rebuild (login,
+ * respawn, dimension change) on both sides — no lifecycle hook.
  */
 @Mixin(InventoryMenu.class)
 public abstract class InventoryMenuEquipmentMixin {
@@ -50,6 +54,7 @@ public abstract class InventoryMenuEquipmentMixin {
                 .group(EquipmentSlots.ELYTRA_GROUP)
                 .storage(new SliceStorage(backing, EquipmentSlots.ELYTRA_INDEX, 1, player))
                 .layout(EquipmentSlots.SLOT_X, EquipmentSlots.ELYTRA_Y, 1)
+                .revealWhen(IMConfig::equipmentSlotsEnabled)
                 // Behavior-FREE creation: the accept-filter + single-item cap (GATING),
                 // Curse-of-Binding (BINDING), and XP mending (MENDING) are declared by
                 // the slot's address in EquipmentSlots.declareSlotBehavior().
@@ -61,6 +66,7 @@ public abstract class InventoryMenuEquipmentMixin {
                 .group(EquipmentSlots.TOTEM_GROUP)
                 .storage(new SliceStorage(backing, EquipmentSlots.TOTEM_INDEX, 1, player))
                 .layout(EquipmentSlots.SLOT_X, EquipmentSlots.TOTEM_Y, 1)
+                .revealWhen(IMConfig::equipmentSlotsEnabled)
                 // Behavior-FREE creation: GATING (totem-only + single item), BINDING,
                 // and MENDING are declared by address in EquipmentSlots.declareSlotBehavior().
                 .register();

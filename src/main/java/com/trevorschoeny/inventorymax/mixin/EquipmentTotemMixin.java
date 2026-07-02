@@ -1,5 +1,6 @@
 package com.trevorschoeny.inventorymax.mixin;
 
+import com.trevorschoeny.inventorymax.config.IMConfig;
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
 
 import net.minecraft.advancements.CriteriaTriggers;
@@ -57,6 +58,7 @@ public abstract class EquipmentTotemMixin {
     private void inventoryMax$equipTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) return;                              // a hand totem already saved them
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return; // vanilla won't save here either
+        if (!IMConfig.equipmentSlotsEnabled()) return;                  // feature off → vanilla death rules
         LivingEntity self = (LivingEntity) (Object) this;
         if (!(self instanceof Player player)) return;
 

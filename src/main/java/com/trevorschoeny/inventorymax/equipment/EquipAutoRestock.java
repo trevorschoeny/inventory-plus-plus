@@ -1,5 +1,7 @@
 package com.trevorschoeny.inventorymax.equipment;
 
+import com.trevorschoeny.inventorymax.config.IMConfig;
+
 import com.trevorschoeny.inventoryplus.autorestock.AutoRestockSearch;
 import com.trevorschoeny.inventoryplus.config.IPConfig;
 import com.trevorschoeny.inventoryplus.cyclable.HotbarCyclable.ExtraSlot;
@@ -56,6 +58,7 @@ public final class EquipAutoRestock {
 
         if (!justConsumed) return;                // only the full→empty transition
         if (mc.screen != null) return;            // gameplay only — not while editing the inventory
+        if (!IMConfig.equipmentSlotsEnabled()) return; // feature off → no totem restock
         if (!IPConfig.autoRestockItem()) return;  // follow the auto-restock toggle
 
         Inventory inv = player.getInventory();

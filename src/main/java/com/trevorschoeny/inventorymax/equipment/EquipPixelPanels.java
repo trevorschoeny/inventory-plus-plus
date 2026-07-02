@@ -1,5 +1,6 @@
 package com.trevorschoeny.inventorymax.equipment;
 
+import com.trevorschoeny.inventorymax.config.IMConfig;
 import com.trevorschoeny.menukit.core.MKCSlot;
 import com.trevorschoeny.menukit.core.MKCSlotAccess;
 import com.trevorschoeny.menukit.core.MKCSlots;
@@ -96,6 +97,7 @@ public final class EquipPixelPanels {
      * when no container screen is up or the anchor slots aren't on it.
      */
     private static ScreenOrigin anchor(int slotsAboveOffhand, int pairIndex) {
+        if (!IMConfig.equipmentSlotsEnabled()) return null; // feature off → no presentation
         if (!(Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> screen)) {
             return null;
         }

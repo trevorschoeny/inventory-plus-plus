@@ -70,6 +70,16 @@ jar {
     from('LICENSE') { rename { "${it}_${project.name}" } }
 }
 
+// Stamp the real project version into fabric.mod.json at build — the manifest
+// declares "version": "${version}"; a hardcoded manifest version silently
+// breaks every dependency gate against this mod (the 2026-07-01 incident).
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
+    }
+}
+
 // ── Modrinth Publishing ────────────────────────────────────────────────
 // Inventory Max — Modrinth project id ETvEZKh9 (slug inventory-max).
 // Lead @ Trevlar Mods owns the publish (§0032).
@@ -79,6 +89,9 @@ modrinth {
     versionNumber = property('inventorymax_version')
     versionName = "Inventory Max ${property('inventorymax_version')}"
     versionType = "release"
+    changelog = '''Inventory Max 1.0.0
+
+Initial release: Container Locks, Equipment Slots (elytra + totem), and Pockets. Requires Inventory Plus, MenuKit, and MenuKit: Containers.'''
     uploadFile = remapJar
     gameVersions = [property('minecraft_version')]
     loaders = ["fabric"]

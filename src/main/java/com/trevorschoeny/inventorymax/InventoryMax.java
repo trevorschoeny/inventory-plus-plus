@@ -1,5 +1,6 @@
 package com.trevorschoeny.inventorymax;
 
+import com.trevorschoeny.inventorymax.config.IMConfig;
 import com.trevorschoeny.inventorymax.containerlocks.ContainerLocks;
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
 import com.trevorschoeny.inventorymax.mending.InventoryMendingProvider;
@@ -35,6 +36,13 @@ public class InventoryMax implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Load the config on BOTH sides (idempotent — the client entrypoint
+        // calls it too). The server-read toggles (inventory mending, equipment
+        // behaviors, container-lock enforcement) otherwise silently fall to
+        // defaults on a dedicated server. Server-safe: IMConfig's only IP
+        // type is HudMode, a plain enum.
+        IMConfig.load();
+
         // Register the SHARED container-lock channel (§0049). Universal, and
         // must happen before any container menu opens so the slot state is
         // known wherever a lock is read or written.

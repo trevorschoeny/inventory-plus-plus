@@ -1,5 +1,6 @@
 package com.trevorschoeny.inventorymax.mixin;
 
+import com.trevorschoeny.inventorymax.config.IMConfig;
 import com.trevorschoeny.inventorymax.equipment.EquipmentSlots;
 import com.trevorschoeny.menukit.core.MKCSlot;
 
@@ -45,6 +46,7 @@ public abstract class InventoryMenuQuickMoveMixin {
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     private void inventoryMax$equipQuickMove(Player player, int index,
                                                   CallbackInfoReturnable<ItemStack> cir) {
+        if (!IMConfig.equipmentSlotsEnabled()) return; // feature off → vanilla routing
         AbstractContainerMenu menu = (AbstractContainerMenu) (Object) this;
         Slot from = menu.slots.get(index);
         if (from == null || !from.hasItem()) return; // let vanilla return EMPTY
