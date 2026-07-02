@@ -78,11 +78,11 @@ public final class EquipmentSlots {
     /** Totem slot frame y (bottom — directly above the offhand frame at 61). */
     public static final int TOTEM_Y = 43;
 
-    // No creative-specific coordinates: EquipScreenPresence anchors both slots to
+    // No creative-specific coordinates: EquipPixelPanels anchors both slots to
     // the real offhand via MenuKit's VanillaSlotResolver, which resolves the
     // offhand's live position on the survival inventory AND the creative tab. The
     // SLOT_X/ELYTRA_Y/TOTEM_Y above remain only as the slot's construction seed
-    // (InventoryMenuEquipmentMixin); the per-frame position is resolved.
+    // (InventoryMenuEquipmentMixin); the per-frame position is the pixel panel's.
 
     /**
      * Player-attached equipment content — 2 slots, survives logout/restart
